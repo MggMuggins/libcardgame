@@ -1,8 +1,6 @@
 import std.stdio : writeln;
 import std.random : randomShuffle;
 import std.traits : EnumMembers;
-import std.algorithm.searching : countUntil;
-import std.algorithm.mutation : remove;
 
 enum CardSuit {
     hearts,
@@ -65,35 +63,47 @@ struct Card {
     }
 }
 
-class Deck {
-    private Card[] cards;
+class CardRegistry {
+    private bool[Card] index;
     
-    //Populate the deck with 32 cards
+    invariant() {
+        assert(this.index.length == 52);
+    }
+    
+    //Sets all possible keys to true
     this() {
         foreach(suit; EnumMembers!CardSuit) {
             foreach(value; EnumMembers!CardValue) {
-                this.cards ~= Card(suit, value);
+                this.checkIn(Card(suit, value));
             }
         }
-        assert(this.cards.length == 52);
-        //Don't assume your cards are shuffled when they come out of the box...
     }
     
-    public void shuffle() {
-        this.cards.randomShuffle();
+    public void checkIn(Card card) {
+        this.index[card] = true;
+    }
+    
+    public void checkOut(Card card) {
+        this.index[card] = false;
+    }
+}
+
+class Deck {
+    private CardRegistry cards;
+    
+    //Populate the deck with 52 cards
+    this() {
+        this.cards = new CardRegistry();
     }
     
     private void printCards() {
-        foreach(card; this.cards) {
-            card.toString().writeln();
-        }
+        
     }
 }
+
 void main() {
     auto test = new Deck();
     test.printCards();
-    writeln();
-    test.shuffle();
     writeln();
     test.printCards();
 }
