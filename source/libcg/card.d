@@ -1,4 +1,4 @@
-module card;
+module libcg.card;
 
 import std.stdio : writeln;
 import std.random : randomShuffle, uniform;
