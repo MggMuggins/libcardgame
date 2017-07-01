@@ -1,8 +1,7 @@
 import std.stdio : writeln;
-import std.random : randomShuffle;
 import std.traits : EnumMembers;
-import std.algorithm.searching : countUntil;
-import std.algorithm.mutation : remove;
+
+import card;
 
 enum CardSuit {
     hearts,
@@ -56,44 +55,36 @@ string toString(CardValue value) {
     return strings[value];
 }
 
-struct Card {
-    CardSuit suit;
-    CardValue value;
+class PlayingCard : Card {
+    public CardSuit suit;
+    public CardValue value;
     
-    string toString() {
+    this(CardSuit suit, CardValue value) {
+        this.suit = suit;
+        this.value = value;
+    }
+    
+    override public string toString() {
         return this.value.toString() ~ " of " ~ this.suit.toString();
     }
 }
 
-class Deck {
-    private Card[] cards;
-    
-    //Populate the deck with 32 cards
+class PlayingCardDeck : Deck {
+    //Populate the deck with 52 cards
     this() {
         foreach(suit; EnumMembers!CardSuit) {
             foreach(value; EnumMembers!CardValue) {
-                this.cards ~= Card(suit, value);
+                this.cards ~= new PlayingCard(suit, value);
             }
         }
         assert(this.cards.length == 52);
         //Don't assume your cards are shuffled when they come out of the box...
     }
     
-    public void shuffle() {
-        this.cards.randomShuffle();
-    }
-    
-    private void printCards() {
-        foreach(card; this.cards) {
-            card.toString().writeln();
-        }
+    ~this() {
+        assert(this.cards.length == 52);
     }
 }
 void main() {
-    auto test = new Deck();
-    test.printCards();
-    writeln();
-    test.shuffle();
-    writeln();
-    test.printCards();
+    auto deck = new PlayingCardDeck();
 }
