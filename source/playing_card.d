@@ -1,3 +1,5 @@
+module playing_card;
+
 import std.stdio : writeln;
 import std.traits : EnumMembers;
 
@@ -11,7 +13,6 @@ enum CardSuit {
 }
 
 enum CardValue {
-    ace,
     two,
     three,
     four,
@@ -23,7 +24,8 @@ enum CardValue {
     ten,
     jack,
     queen,
-    king
+    king,
+    ace
 }
 
 string toString(CardSuit suit) {
@@ -84,7 +86,4 @@ class PlayingCardDeck : Deck {
     ~this() {
         assert(this.cards.length == 52);
     }
-}
-void main() {
-    auto deck = new PlayingCardDeck();
 }
